@@ -10,7 +10,6 @@ class BodyShopWidget extends StatefulWidget {
 }
 
 class BodyShopWidgetState extends State<BodyShopWidget> {
-  int sum = 0;
   List<ProductsInfo> products = [];
   List<ProductsInfo> basket = [];
   var filteredProducts = <ProductsInfo>[];
@@ -22,15 +21,20 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
     filteredProducts = products;
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    products = context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!.products;
+    filteredProducts = products;
+    basket = context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!.basket;
+  }
+
   void _searchProduct() {
     final query = _searchController.text;
     if (query.isNotEmpty) {
       filteredProducts = products.where((ProductsInfo product) {
         return product.name.toLowerCase().contains(query.toLowerCase());
       }).toList();
-      if (filteredProducts.isEmpty) {
-        filteredProducts = products;
-      }
     } else {
       filteredProducts = products;
     }
@@ -58,39 +62,48 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
   }
 
   Widget _buildGrid(BuildContext context, int index) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            filteredProducts[index].name,
+            maxLines: 1,
+          ),
+        ),
+        const SizedBox(
+          height: 10,
+        ),
+        ConstrainedBox(
+            constraints: const BoxConstraints(
+                minWidth: 200,
+                minHeight: 200,
+                maxWidth: 200,
+                maxHeight: 200),
+            child: filteredProducts[index].image),
+        Text('\$ ${filteredProducts[index].price}'),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _buildTextProductExist(index),
+            _buildTextButton(index),
+          ],
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Padding(
           padding: const EdgeInsets.only(top: 70),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  filteredProducts[index].name,
-                  maxLines: 1,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ConstrainedBox(
-                  constraints: const BoxConstraints(
-                      minWidth: 200,
-                      minHeight: 200,
-                      maxWidth: 200,
-                      maxHeight: 200),
-                  child: filteredProducts[index].image),
-              Text('\$ ${filteredProducts[index].price}'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _buildTextProductExist(index),
-                  _buildTextButton(index),
-                ],
-              )
-            ],
-          ),
+          child: GridView.builder(
+              gridDelegate:
+                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+              itemCount: filteredProducts.length,
+              itemBuilder: _buildGrid),
         ),
         TextField(
           controller: _searchController,
@@ -99,25 +112,12 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    products = context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!.products;
-    filteredProducts = products;
-    basket = context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!.basket;
-    return GridView.builder(
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
-        itemCount: filteredProducts.length,
-        itemBuilder: _buildGrid);
-  }
-
   final _searchController = TextEditingController();
 
   void buy(int index, BuildContext context) {
     var product = products[index];
     if (product.num > 0) {
       product.num--;
-      sum += product.price;
       basket.add(product);
     } else {
       context.findAncestorWidgetOfExactType<TextButton>();
