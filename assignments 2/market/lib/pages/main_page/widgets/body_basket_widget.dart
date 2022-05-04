@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:market/pages/main_page/widgets/scaffold_widget.dart';
 
+import '../util/buttons_style.dart';
 import '../util/products_info.dart';
-
+import '../util/texts_style.dart';
 
 class BodyBasketWidget extends StatefulWidget {
   const BodyBasketWidget({Key? key}) : super(key: key);
@@ -15,7 +16,6 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
   List<ProductsInfo> products = [];
   List<ProductsInfo> basket = [];
 
-
   void _cancel(int index) {
     var product = basket[index];
     basket.removeAt(index);
@@ -23,18 +23,24 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
       int i = products.indexOf(product);
       products[i].num++;
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
 
   void _buyAllProducts() {
     basket.clear();
-    setState(() {
-
-    });
+    setState(() {});
   }
 
+  void _cancelAll() {
+    if (basket.isNotEmpty) {
+      for (var product in basket) {
+        int i = products.indexOf(product);
+        products[i].num++;
+      }
+      basket.clear();
+    }
+    setState(() {});
+  }
 
   Widget _buildGrid(BuildContext context, int index) {
     return Column(
@@ -51,14 +57,17 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
         ),
         ConstrainedBox(
             constraints: const BoxConstraints(
-                minWidth: 200,
-                minHeight: 200,
-                maxWidth: 200,
-                maxHeight: 200),
+                minWidth: 200, minHeight: 200, maxWidth: 200, maxHeight: 200),
             child: basket[index].image),
         Text('\$ ${basket[index].price}'),
         TextButton(
-            onPressed: () => _cancel(index), child: Text('Отменить покупку'))
+          onPressed: () => _cancel(index),
+          child: const Text(
+            'Отменить покупку',
+            style: TextsStyle.cancel,
+          ),
+          style: ButtonsStyle.cancel,
+        )
       ],
     );
   }
@@ -74,13 +83,12 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    products =
-        context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
-            .products;
-    basket =
-        context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
-            .basket;
-
+    products = context
+        .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
+        .products;
+    basket = context
+        .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
+        .basket;
   }
 
   @override
@@ -90,16 +98,30 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
         Padding(
           padding: const EdgeInsets.only(top: 70),
           child: GridView.builder(
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 1),
               itemCount: basket.length,
               itemBuilder: _buildGrid),
         ),
-        ElevatedButton(onPressed: _buyAllProducts, child: Text('Купить - ${calculateSum()}'))
+        Row(
+          children: [
+            Expanded(
+              child: ElevatedButton(
+                onPressed: _buyAllProducts,
+                child: Text('Купить - ${calculateSum()}'),
+                style: ButtonsStyle.buyAll,
+              ),
+            ),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: _cancelAll,
+                child: const Text('Отменить'),
+                style: ButtonsStyle.cancelAll,
+              ),
+            )
+          ],
+        )
       ],
     );
   }
 }
-
-

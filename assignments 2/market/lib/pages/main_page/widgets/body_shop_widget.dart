@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:market/pages/main_page/util/products_info.dart';
 import 'package:market/pages/main_page/widgets/scaffold_widget.dart';
 
+import '../util/buttons_style.dart';
+import '../util/texts_style.dart';
+
 class BodyShopWidget extends StatefulWidget {
   const BodyShopWidget({Key? key}) : super(key: key);
 
@@ -13,7 +16,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
   List<ProductsInfo> products = [];
   List<ProductsInfo> basket = [];
   var filteredProducts = <ProductsInfo>[];
-  
+
   @override
   void initState() {
     super.initState();
@@ -24,9 +27,13 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    products = context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!.products;
+    products = context
+        .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
+        .products;
     filteredProducts = products;
-    basket = context.dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!.basket;
+    basket = context
+        .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
+        .basket;
   }
 
   void _searchProduct() {
@@ -53,11 +60,21 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
     int num = filteredProducts[index].num;
     if (num > 0) {
       return TextButton(
-          onPressed: () => buy(index, context), child: const Text('купить'));
+        onPressed: () => buy(index, context),
+        child: const Text(
+          'купить',
+          style: TextsStyle.buy,
+        ),
+        style: ButtonsStyle.buy,
+      );
     }
-    return const TextButton(
+    return TextButton(
       onPressed: null,
-      child: Text('продано'),
+      child: const Text(
+        'продано',
+        style: TextsStyle.sold,
+      ),
+      style: ButtonsStyle.sold,
     );
   }
 
@@ -76,10 +93,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
         ),
         ConstrainedBox(
             constraints: const BoxConstraints(
-                minWidth: 200,
-                minHeight: 200,
-                maxWidth: 200,
-                maxHeight: 200),
+                minWidth: 200, minHeight: 200, maxWidth: 200, maxHeight: 200),
             child: filteredProducts[index].image),
         Text('\$ ${filteredProducts[index].price}'),
         Row(
@@ -100,8 +114,8 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
         Padding(
           padding: const EdgeInsets.only(top: 70),
           child: GridView.builder(
-              gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 1),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1),
               itemCount: filteredProducts.length,
               itemBuilder: _buildGrid),
         ),

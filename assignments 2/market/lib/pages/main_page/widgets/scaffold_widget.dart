@@ -103,7 +103,7 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
         products: products,
         child: IndexedStack(
           index: select,
-          children: [BodyShopWidget(), BodyBasketWidget()],
+          children: const [BodyShopWidget(), BodyBasketWidget()],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -138,6 +138,6 @@ class ProductsProviderInherit extends InheritedWidget {
 
   @override
   bool updateShouldNotify(ProductsProviderInherit old) {
-    return  old.basket != basket || old.products != products;
+    return old.basket != basket || old.products != products;
   }
 }
