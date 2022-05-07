@@ -109,6 +109,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
 
   @override
   Widget build(BuildContext context) {
+    print(basket);
     return Stack(
       children: [
         Padding(

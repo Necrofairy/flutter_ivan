@@ -89,6 +89,7 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
     basket = context
         .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
         .basket;
+
   }
 
   @override

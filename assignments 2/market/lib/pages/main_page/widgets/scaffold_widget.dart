@@ -103,7 +103,7 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
         products: products,
         child: IndexedStack(
           index: select,
-          children: const [BodyShopWidget(), BodyBasketWidget()],
+          children:   [BodyShopWidget(), BodyBasketWidget()],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -119,10 +119,10 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
 }
 
 class ProductsProviderInherit extends InheritedWidget {
-  List<ProductsInfo> basket;
-  List<ProductsInfo> products;
+  final  List<ProductsInfo> basket;
+  final List<ProductsInfo> products;
 
-  ProductsProviderInherit({
+  const ProductsProviderInherit({
     Key? key,
     required this.products,
     required this.basket,
