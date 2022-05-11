@@ -9,4 +9,5 @@ abstract class ImagesName {
   static const product8 = 'assets/images/8.jpg';
   static const product9 = 'assets/images/9.jpg';
   static const product10 = 'assets/images/10.jpg';
+  static const quality = 'assets/images/11.png';
 }

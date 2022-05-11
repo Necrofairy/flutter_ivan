@@ -107,14 +107,20 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
             Expanded(
               child: ElevatedButton(
                 onPressed: _buyAllProducts,
-                child: Text('Купить - ${calculateSum()}'),
+                child: Text(
+                  'Купить - ${calculateSum()}',
+                  style: TextsStyle.blackText,
+                ),
                 style: ButtonsStyle.buyAll,
               ),
             ),
             Expanded(
               child: ElevatedButton(
                 onPressed: _cancelAll,
-                child: const Text('Отменить'),
+                child: const Text(
+                  'Отменить',
+                  style: TextsStyle.blackText,
+                ),
                 style: ButtonsStyle.cancelAll,
               ),
             )

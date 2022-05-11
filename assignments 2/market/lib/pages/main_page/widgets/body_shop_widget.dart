@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:market/pages/main_page/util/colors_rgb.dart';
 import 'package:market/pages/main_page/util/find_decoration.dart';
+import 'package:market/pages/main_page/util/images_name.dart';
 import 'package:market/pages/main_page/util/products_info.dart';
 import 'package:market/pages/main_page/util/products_info_static.dart';
+import 'package:market/pages/main_page/util/switch_state.dart';
 import 'package:market/pages/main_page/widgets/scaffold_widget.dart';
 
 import '../util/buttons_style.dart';
@@ -95,9 +98,17 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
             height: 5,
           ),
           Expanded(
-              child: Image.asset(
-            ProductsInfoStatic.products[index].path,
-            fit: BoxFit.cover,
+              child: Stack(
+            children: [
+              Image.asset(
+                ProductsInfoStatic.products[index].path,
+                fit: BoxFit.cover,
+              ),
+                Positioned(
+                  top: -10,
+                    left: -10,
+                    child: SizedBox(width: 50, height: 50,child: SwitchState.quality? Image.asset(ImagesName.quality): null)),
+            ],
           )),
           Text('\$ ${filteredProducts[index].price}'),
           Row(
@@ -128,12 +139,28 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
             itemBuilder: _buildGrid,
           ),
         ),
-        TextField(
-          controller: _searchController,
-          decoration: FindDecoration.findDecoration,
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: TextField(
+                controller: _searchController,
+                decoration: FindDecoration.findDecoration,
+              ),
+            ),
+            Expanded(
+                child: Switch.adaptive(
+                  activeColor: ColorsRGB.switchColor,
+                    value: SwitchState.quality, onChanged: switchChanged))
+          ],
         ),
       ],
     );
+  }
+
+  void switchChanged(bool quality) {
+    SwitchState.quality = quality;
+    setState(() {});
   }
 
   final _searchController = TextEditingController();
@@ -144,9 +171,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
       product.num--;
       basket.add(product);
     }
-    context.findAncestorStateOfType<ScaffoldWidgetState>()?.setState(() {
-
-    });
+    context.findAncestorStateOfType<ScaffoldWidgetState>()?.setState(() {});
     setState(() {});
   }
 }

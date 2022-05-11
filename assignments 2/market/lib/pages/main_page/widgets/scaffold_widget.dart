@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market/pages/main_page/util/texts_style.dart';
 import 'package:market/pages/main_page/widgets/body_basket_widget.dart';
 import 'package:market/pages/main_page/widgets/body_shop_widget.dart';
 
@@ -28,14 +29,7 @@ class ScaffoldWidgetState extends State<ScaffoldWidget> {
       appBar: AppBar(
         title: const Text(
           'TechnoShop',
-          style: TextStyle(
-              color: Colors.black,
-              fontSize: 24,
-              letterSpacing: 3,
-              shadows: <Shadow>[
-                Shadow(
-                    offset: Offset(-1, -1), blurRadius: 3, color: Colors.black)
-              ]),
+          style: TextsStyle.title
         ),
         centerTitle: true,
       ),
