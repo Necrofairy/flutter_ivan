@@ -144,6 +144,9 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
       product.num--;
       basket.add(product);
     }
+    context.findAncestorStateOfType<ScaffoldWidgetState>()?.setState(() {
+
+    });
     setState(() {});
   }
 }

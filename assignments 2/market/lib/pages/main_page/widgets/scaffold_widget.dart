@@ -9,10 +9,10 @@ class ScaffoldWidget extends StatefulWidget {
   const ScaffoldWidget({Key? key}) : super(key: key);
 
   @override
-  State<ScaffoldWidget> createState() => _ScaffoldWidgetState();
+  State<ScaffoldWidget> createState() => ScaffoldWidgetState();
 }
 
-class _ScaffoldWidgetState extends State<ScaffoldWidget> {
+class ScaffoldWidgetState extends State<ScaffoldWidget> {
   int select = 0;
   var basket = <ProductsInfo>[];
 
@@ -46,10 +46,10 @@ class _ScaffoldWidgetState extends State<ScaffoldWidget> {
       ),
       bottomNavigationBar: BottomNavigationBar(
           currentIndex: select,
-          items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.shop), label: 'Shop'),
+          items:  [
+            const BottomNavigationBarItem(icon: Icon(Icons.shop), label: 'Shop'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart_rounded), label: 'Basket')
+                icon: const Icon(Icons.shopping_cart_rounded), label: 'Basket - ${basket.length}')
           ],
           onTap: onSelect),
     );
