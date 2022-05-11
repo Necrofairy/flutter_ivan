@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:market/pages/main_page/util/products_info_static.dart';
 import 'package:market/pages/main_page/widgets/scaffold_widget.dart';
 
 import '../util/buttons_style.dart';
@@ -13,15 +14,14 @@ class BodyBasketWidget extends StatefulWidget {
 }
 
 class _BodyBasketWidgetState extends State<BodyBasketWidget> {
-  List<ProductsInfo> products = [];
   List<ProductsInfo> basket = [];
 
   void _cancel(int index) {
     var product = basket[index];
     basket.removeAt(index);
-    if (products.contains(product)) {
-      int i = products.indexOf(product);
-      products[i].num++;
+    if (ProductsInfoStatic.products.contains(product)) {
+      int i = ProductsInfoStatic.products.indexOf(product);
+      ProductsInfoStatic.products[i].num++;
     }
     setState(() {});
   }
@@ -34,8 +34,8 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
   void _cancelAll() {
     if (basket.isNotEmpty) {
       for (var product in basket) {
-        int i = products.indexOf(product);
-        products[i].num++;
+        int i = ProductsInfoStatic.products.indexOf(product);
+        ProductsInfoStatic.products[i].num++;
       }
       basket.clear();
     }
@@ -49,16 +49,14 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             basket[index].name,
-            maxLines: 1,
+            maxLines: 2,
+            style: const TextStyle(overflow: TextOverflow.ellipsis),
           ),
         ),
         const SizedBox(
           height: 10,
         ),
-        ConstrainedBox(
-            constraints: const BoxConstraints(
-                minWidth: 200, minHeight: 200, maxWidth: 200, maxHeight: 200),
-            child: basket[index].image),
+        Expanded(child: Image.asset(basket[index].path, fit: BoxFit.cover,)),
         Text('\$ ${basket[index].price}'),
         TextButton(
           onPressed: () => _cancel(index),
@@ -83,9 +81,6 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    products = context
-        .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
-        .products;
     basket = context
         .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
         .basket;
@@ -100,7 +95,7 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
           padding: const EdgeInsets.only(top: 70),
           child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1),
+                  crossAxisCount: 2),
               itemCount: basket.length,
               itemBuilder: _buildGrid),
         ),
