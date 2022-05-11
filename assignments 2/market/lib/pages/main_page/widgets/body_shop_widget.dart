@@ -84,7 +84,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: SwitchState.quality? MainAxisAlignment.spaceAround: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Align(
@@ -98,20 +98,14 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
           const SizedBox(
             height: 5,
           ),
-          Expanded(
-              child: Stack(
-            children: [
-              Image.asset(
+          if (SwitchState.quality)  Expanded(
+              child: Image.asset(
                 ProductsInfoStatic.products[index].path,
                 fit: BoxFit.cover,
-              ),
-                Positioned(
-                  top: -5,
-                    left: -5,
-                    child: SizedBox(width: 50, height: 50,child: SwitchState.quality? Image.asset(ImagesName.quality): null)),
-            ],
-          )),
-          Text('\$ ${filteredProducts[index].price}', style: TextsStyle.price),
+              )),
+          Align(
+            alignment: Alignment.center,
+              child: Text('\$ ${filteredProducts[index].price}',style: TextsStyle.price)),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -151,8 +145,9 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
             ),
             Expanded(
                 child: Switch.adaptive(
-                  activeColor: ColorsRGB.switchColor,
-                    value: SwitchState.quality, onChanged: switchChanged))
+                    activeColor: ColorsRGB.switchColor,
+                    value: SwitchState.quality,
+                    onChanged: switchChanged))
           ],
         ),
       ],

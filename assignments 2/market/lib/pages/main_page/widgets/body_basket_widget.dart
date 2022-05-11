@@ -4,6 +4,7 @@ import 'package:market/pages/main_page/widgets/scaffold_widget.dart';
 
 import '../util/buttons_style.dart';
 import '../util/products_info.dart';
+import '../util/switch_state.dart';
 import '../util/texts_style.dart';
 
 class BodyBasketWidget extends StatefulWidget {
@@ -44,6 +45,8 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
 
   Widget _buildGrid(BuildContext context, int index) {
     return Column(
+      mainAxisAlignment: SwitchState.quality? MainAxisAlignment.spaceAround: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -57,7 +60,7 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
         const SizedBox(
           height: 10,
         ),
-        Expanded(
+        if (SwitchState.quality) Expanded(
             child: Image.asset(
           basket[index].path,
           fit: BoxFit.cover,
