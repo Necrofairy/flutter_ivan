@@ -49,8 +49,9 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             basket[index].name,
+            style: TextsStyle.nameProduct,
             maxLines: 2,
-            style: const TextStyle(overflow: TextOverflow.ellipsis),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         const SizedBox(
@@ -61,7 +62,7 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
           basket[index].path,
           fit: BoxFit.cover,
         )),
-        Text('\$ ${basket[index].price}'),
+        Text('\$ ${basket[index].price}', style: TextsStyle.price,),
         TextButton(
           onPressed: () => _cancel(index),
           child: const Text(

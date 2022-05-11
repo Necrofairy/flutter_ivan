@@ -53,9 +53,9 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
   Widget _buildTextProductExist(int index) {
     int num = filteredProducts[index].num;
     if (num > 0) {
-      return const Text('Есть в наличии');
+      return const Text('Есть в наличии -');
     }
-    return const Text('Нет в наличии');
+    return const Text('Нет в наличии -');
   }
 
   Widget _buildTextButton(int index) {
@@ -64,7 +64,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
       return TextButton(
         onPressed: () => buy(index, context),
         child: const Text(
-          'купить',
+          ' купить',
           style: TextsStyle.buy,
         ),
         style: ButtonsStyle.buy,
@@ -73,7 +73,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
     return TextButton(
       onPressed: null,
       child: const Text(
-        'продано',
+        ' продано',
         style: TextsStyle.sold,
       ),
       style: ButtonsStyle.sold,
@@ -91,6 +91,7 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
               alignment: Alignment.center,
               child: Text(
                 filteredProducts[index].name,
+                style: TextsStyle.nameProduct,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               )),
@@ -105,12 +106,12 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
                 fit: BoxFit.cover,
               ),
                 Positioned(
-                  top: -10,
-                    left: -10,
+                  top: -5,
+                    left: -5,
                     child: SizedBox(width: 50, height: 50,child: SwitchState.quality? Image.asset(ImagesName.quality): null)),
             ],
           )),
-          Text('\$ ${filteredProducts[index].price}'),
+          Text('\$ ${filteredProducts[index].price}', style: TextsStyle.price),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
