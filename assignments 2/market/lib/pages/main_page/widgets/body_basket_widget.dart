@@ -56,7 +56,11 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
         const SizedBox(
           height: 10,
         ),
-        Expanded(child: Image.asset(basket[index].path, fit: BoxFit.cover,)),
+        Expanded(
+            child: Image.asset(
+          basket[index].path,
+          fit: BoxFit.cover,
+        )),
         Text('\$ ${basket[index].price}'),
         TextButton(
           onPressed: () => _cancel(index),
@@ -84,7 +88,6 @@ class _BodyBasketWidgetState extends State<BodyBasketWidget> {
     basket = context
         .dependOnInheritedWidgetOfExactType<ProductsProviderInherit>()!
         .basket;
-
   }
 
   @override

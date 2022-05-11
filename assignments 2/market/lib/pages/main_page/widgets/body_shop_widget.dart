@@ -37,7 +37,8 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
   void _searchProduct() {
     final query = _searchController.text;
     if (query.isNotEmpty) {
-      filteredProducts = ProductsInfoStatic.products.where((ProductsInfo product) {
+      filteredProducts =
+          ProductsInfoStatic.products.where((ProductsInfo product) {
         return product.name.toLowerCase().contains(query.toLowerCase());
       }).toList();
     } else {
@@ -83,15 +84,32 @@ class BodyShopWidgetState extends State<BodyShopWidget> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Align(alignment: Alignment.center,child: Text(filteredProducts[index].name, maxLines: 2, overflow: TextOverflow.ellipsis,)),
-          const SizedBox(height: 5,),
-          Expanded(child: Image.asset(ProductsInfoStatic.products[index].path, fit: BoxFit.cover,)),
+          Align(
+              alignment: Alignment.center,
+              child: Text(
+                filteredProducts[index].name,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              )),
+          const SizedBox(
+            height: 5,
+          ),
+          Expanded(
+              child: Image.asset(
+            ProductsInfoStatic.products[index].path,
+            fit: BoxFit.cover,
+          )),
           Text('\$ ${filteredProducts[index].price}'),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            _buildTextProductExist(index),
-            const SizedBox(width: 2,),
-            _buildTextButton(index),
-          ],)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildTextProductExist(index),
+              const SizedBox(
+                width: 2,
+              ),
+              _buildTextButton(index),
+            ],
+          )
         ],
       ),
     );
