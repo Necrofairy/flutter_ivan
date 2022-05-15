@@ -6,6 +6,7 @@ class ItemModel {
   final String mainImage;
   final String descriptionImage;
   final String description;
+  bool isFavorite;
 
   ItemModel(
       {required this.name,
@@ -13,6 +14,6 @@ class ItemModel {
       required this.mainImage,
       required this.descriptionImage,
       required this.description,
-      required this.num, this.count = 0
+      required this.num, this.count = 0, this.isFavorite = false
       });
 }

@@ -22,17 +22,13 @@ class _ShopWidgetState extends State<ShopWidget> {
   final _searchController = TextEditingController();
   List<ItemModel> filter = [];
   List<ItemModel> favorite = [];
-  List<bool> isFavorite = [];
-  bool isSwitchFavorite = false;
+  bool isShowFavorite = false;
 
   @override
   void initState() {
     super.initState();
     _searchController.addListener(_searchItem);
     filter = Items.items;
-    for (int i = 0; i < Items.items.length; i++) {
-      isFavorite.add(false);
-    }
   }
 
   @override
@@ -48,15 +44,32 @@ class _ShopWidgetState extends State<ShopWidget> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
           child: Row(
+            mainAxisAlignment: isShowFavorite == true
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.start,
             children: [
-              Expanded(
-                flex: 10,
-                child: TextField(
-                  controller: _searchController,
-                  decoration: DecorationTextField.decoration,
-                ),
-              ),
-              Expanded(child: IconButton(icon: Icon(Icons.favorite), onPressed: _buildFavorite,))
+              isShowFavorite == false
+                  ? Expanded(
+                      flex: 10,
+                      child: TextField(
+                        controller: _searchController,
+                        decoration: DecorationTextField.decoration,
+                      ),
+                    )
+                  : const Text('Избранное'),
+              isShowFavorite == false
+                  ? Expanded(
+                      child: IconButton(
+                      icon: const Icon(Icons.favorite),
+                      onPressed: () {
+                        _showFavorite();
+                      },
+                    ))
+                  : IconButton(
+                      onPressed: () {
+                        _showFavorite();
+                      },
+                      icon: const Icon(Icons.favorite)),
             ],
           ),
         ),
@@ -65,6 +78,7 @@ class _ShopWidgetState extends State<ShopWidget> {
   }
 
   Widget _buildGridItem(BuildContext context, int index) {
+    ItemModel item = filter[index];
     return Stack(
       children: [
         Container(
@@ -83,20 +97,18 @@ class _ShopWidgetState extends State<ShopWidget> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  filter[index].name,
+                  item.name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextsStyle.title,
                 ),
-                Expanded(
-                    child: Image.asset(filter[index].mainImage,
-                        fit: BoxFit.cover)),
+                Expanded(child: Image.asset(item.mainImage, fit: BoxFit.cover)),
                 Text(
-                  'На складе осталось - ${filter[index].num}',
+                  'На складе осталось - ${item.num}',
                   style: TextsStyle.text,
                 ),
                 Text(
-                  'Цена: \$ ${filter[index].price}',
+                  'Цена: \$ ${item.price}',
                   style: TextsStyle.price,
                 ),
               ],
@@ -105,18 +117,17 @@ class _ShopWidgetState extends State<ShopWidget> {
         ),
         Container(
           alignment: Alignment.topRight,
-          child: isFavorite[index] == false
+          child: item.isFavorite
               ? IconButton(
-                  icon: const Icon(Icons.favorite_border),
                   onPressed: () {
-                    _addFavorite(index);
+                    _removeFavorite(item);
                   },
-                )
+                  icon: const Icon(Icons.favorite))
               : IconButton(
                   onPressed: () {
-                    _addFavorite(index);
+                    _addFavorite(item);
                   },
-                  icon: const Icon(Icons.favorite)),
+                  icon: const Icon(Icons.favorite_border)),
         )
       ],
     );
@@ -135,54 +146,39 @@ class _ShopWidgetState extends State<ShopWidget> {
 
   void _searchItem() {
     String query = _searchController.text;
-    if (isSwitchFavorite == false) {
-      if (query.isNotEmpty) {
-        filter = Items.items
-            .where((element) =>
-            element.name.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      } else {
-        filter = Items.items;
-      }
-      setState(() {});
-      return;
-    }
     if (query.isNotEmpty) {
-      filter = favorite
+      filter = Items.items
           .where((element) =>
-          element.name.toLowerCase().contains(query.toLowerCase()))
+              element.name.toLowerCase().contains(query.toLowerCase()))
           .toList();
     } else {
-      filter = favorite;
+      filter = Items.items;
     }
-    setState(() {
-
-    });
-
+    setState(() {});
+    return;
   }
 
-  void _addFavorite(int index) {
-    if (isFavorite[index] == false) {
-      isFavorite[index] = true;
-      favorite.add(filter[index]);
-    } else {
-      isFavorite[index] = false;
-      int i = favorite.indexOf(filter[index]);
-      favorite.removeAt(i);
-    }
+  void _addFavorite(ItemModel item) {
+    item.isFavorite = true;
+    favorite.add(item);
     setState(() {});
   }
 
-  void _buildFavorite() {
-    if (isSwitchFavorite == false) {
-      isSwitchFavorite = true;
+  void _removeFavorite(ItemModel item) {
+    item.isFavorite = false;
+    int i = favorite.indexOf(item);
+    favorite.removeAt(i);
+    setState(() {});
+  }
+
+  void _showFavorite() {
+    if (isShowFavorite == false) {
+      isShowFavorite = true;
       filter = favorite;
     } else {
-      isSwitchFavorite = false;
+      isShowFavorite = false;
       filter = Items.items;
     }
-    setState(() {
-
-    });
+    setState(() {});
   }
 }
