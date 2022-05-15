@@ -33,19 +33,19 @@ class _ShopWidgetState extends State<ShopWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GridView.builder(
-            padding: const EdgeInsets.only(top: 70),
-            itemCount: filter.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
-            itemBuilder: _buildGridItem),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
           child: TextField(
             controller: _searchController,
             decoration: DecorationTextField.decoration,
           ),
-        )
+        ),
+        GridView.builder(
+            padding: const EdgeInsets.only(top: 70),
+            itemCount: filter.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
+            itemBuilder: _buildGridItem),
       ],
     );
   }
@@ -53,6 +53,7 @@ class _ShopWidgetState extends State<ShopWidget> {
   Widget _buildGridItem(BuildContext context, int index) {
     return Container(
       decoration: const BoxDecoration(
+        color: Colors.white,
           border: Border(
         top: BorderSide(width: 1),
         bottom: BorderSide(width: 1),

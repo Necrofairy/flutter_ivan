@@ -22,26 +22,26 @@ class _BasketBodyState extends State<BasketBody> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        Row(
+          children: [
+            Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+                  child: _buildBuyButton(),
+                )),
+            Expanded(
+                child: Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+                    child: _buildCancelButton())),
+          ],
+        ),
         GridView.builder(
             padding: const EdgeInsets.only(top: 47),
             itemCount: widget.basket.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, mainAxisSpacing: 2, crossAxisSpacing: 4),
             itemBuilder: _buildItemGrid),
-        Row(
-          children: [
-            Expanded(
-                child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
-              child: _buildBuyButton(),
-            )),
-            Expanded(
-                child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
-                    child: _buildCancelButton())),
-          ],
-        )
       ],
     );
   }
@@ -50,6 +50,7 @@ class _BasketBodyState extends State<BasketBody> {
     ItemModel item = widget.basket[index];
     return Container(
       decoration: const BoxDecoration(
+        color: Colors.white,
           border: Border(
         top: BorderSide(width: 1),
         bottom: BorderSide(width: 1),
