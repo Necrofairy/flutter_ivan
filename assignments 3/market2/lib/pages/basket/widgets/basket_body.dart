@@ -22,6 +22,12 @@ class _BasketBodyState extends State<BasketBody> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        GridView.builder(
+            padding: const EdgeInsets.only(top: 47),
+            itemCount: widget.basket.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2, mainAxisSpacing: 2, crossAxisSpacing: 4),
+            itemBuilder: _buildItemGrid),
         Row(
           children: [
             Expanded(
@@ -36,12 +42,6 @@ class _BasketBodyState extends State<BasketBody> {
                     child: _buildCancelButton())),
           ],
         ),
-        GridView.builder(
-            padding: const EdgeInsets.only(top: 47),
-            itemCount: widget.basket.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, mainAxisSpacing: 2, crossAxisSpacing: 4),
-            itemBuilder: _buildItemGrid),
       ],
     );
   }
