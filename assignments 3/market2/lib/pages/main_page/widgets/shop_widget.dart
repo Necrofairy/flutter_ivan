@@ -93,7 +93,7 @@ class _ShopWidgetState extends State<ShopWidget> {
         MaterialPageRoute(
             builder: (context) => ItemInfo(
                   basket: widget.basket,
-                  index: index,
+                  item: filter[index],
                   setStateParent: widget.setStateParent,
                 )));
   }

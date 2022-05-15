@@ -8,13 +8,13 @@ import '../../utils/items.dart';
 
 class ItemInfo extends StatefulWidget {
   final List<ItemModel> basket;
-  final int index;
+  final ItemModel item;
   final void Function() setStateParent;
 
   const ItemInfo(
       {Key? key,
       required this.basket,
-      required this.index,
+      required this.item,
       required this.setStateParent})
       : super(key: key);
 
@@ -25,7 +25,7 @@ class ItemInfo extends StatefulWidget {
 class _ItemInfoState extends State<ItemInfo> {
   @override
   Widget build(BuildContext context) {
-    ItemModel item = Items.items[widget.index];
+    ItemModel item = widget.item;
     return Scaffold(
       backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(

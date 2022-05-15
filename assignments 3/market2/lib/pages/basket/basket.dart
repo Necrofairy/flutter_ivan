@@ -26,7 +26,6 @@ class _BasketState extends State<Basket> {
       body: BasketBody(
         basket: widget.basket,
         setStateParent: widget.setStateParent,
-        setStateBasket: () => setState(() {}),
       ),
     );
   }

@@ -6,13 +6,11 @@ import '../../../models/item_model.dart';
 class BasketBody extends StatefulWidget {
   final List<ItemModel> basket;
   final void Function() setStateParent;
-  final void Function() setStateBasket;
 
   const BasketBody(
       {Key? key,
       required this.basket,
-      required this.setStateParent,
-      required this.setStateBasket})
+      required this.setStateParent})
       : super(key: key);
 
   @override
@@ -95,7 +93,7 @@ class _BasketBodyState extends State<BasketBody> {
   }
 
   Widget _buildBuyButton() {
-    Widget button = widget.basket.isEmpty
+    Widget button = widget.basket.isNotEmpty
         ? ElevatedButton(
             style: ButtonsStyle.button,
             onPressed: _buyAll,
@@ -108,7 +106,7 @@ class _BasketBodyState extends State<BasketBody> {
   }
 
   Widget _buildCancelButton() {
-    Widget button = widget.basket.isEmpty
+    Widget button = widget.basket.isNotEmpty
         ? ElevatedButton(
             style: ButtonsStyle.button,
             onPressed: _cancelAll,
