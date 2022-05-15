@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:market2/utils/app_bar_static.dart';
+import 'package:market2/utils/buttons_style.dart';
+import 'package:market2/utils/colors_rgb.dart';
 
 import '../../models/item_model.dart';
 import '../../utils/items.dart';
@@ -25,6 +27,7 @@ class _ItemInfoState extends State<ItemInfo> {
   Widget build(BuildContext context) {
     ItemModel item = Items.items[widget.index];
     return Scaffold(
+      backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(
           child: _buildIconBasket(),
           num: _calculateNum(),
@@ -33,13 +36,23 @@ class _ItemInfoState extends State<ItemInfo> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(item.name),
-            Image.asset(item.descriptionImage, fit: BoxFit.cover,),
-            Text(item.description),
-            Text('На складе осталось ${item.num} штук!'),
-            ElevatedButton(
-                onPressed: () => {_buy(item)},
-                child: Text('Купить за ${item.price}'))
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Text(item.name),
+            ),
+            Image.asset(
+              item.descriptionImage,
+              fit: BoxFit.cover,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Text(item.description),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              child: Text('На складе осталось ${item.num} штук!'),
+            ),
+            _buildButton(item),
           ],
         ),
       ),
@@ -65,6 +78,19 @@ class _ItemInfoState extends State<ItemInfo> {
 
   void _moveBasket() {
     Navigator.pushNamed(context, '/basket');
+  }
+
+  Widget _buildButton(ItemModel item) {
+    if (item.num != 0) {
+      return ElevatedButton(
+          style: ButtonsStyle.button,
+          onPressed: () => _buy(item),
+          child: Text('Купить за ${item.price}'));
+    }
+    return ElevatedButton(
+        style: ButtonsStyle.button,
+        onPressed: null,
+        child: Text('Купить за ${item.price}'));
   }
 
   void _buy(ItemModel item) {

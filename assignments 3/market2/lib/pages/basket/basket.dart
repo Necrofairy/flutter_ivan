@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:market2/pages/basket/widgets/basket_body.dart';
 import 'package:market2/utils/app_bar_static.dart';
+import 'package:market2/utils/colors_rgb.dart';
 
 import '../../models/item_model.dart';
 
@@ -19,11 +20,14 @@ class _BasketState extends State<Basket> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(
           child: _buildIconBasket(), num: _calculateNum(), title: 'Basket'),
-      body: BasketBody(basket: widget.basket,
+      body: BasketBody(
+        basket: widget.basket,
         setStateParent: widget.setStateParent,
-        setStateBasket: () => setState(() {}),),
+        setStateBasket: () => setState(() {}),
+      ),
     );
   }
 
@@ -33,10 +37,8 @@ class _BasketState extends State<Basket> {
     for (ItemModel item in widget.basket) {
       num += item.count;
     }
-    print(num);
     return num;
   }
-
 
   Widget _buildIconBasket() {
     return const Expanded(

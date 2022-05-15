@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:market2/utils/buttons_style.dart';
 
 import '../../../models/item_model.dart';
 
@@ -9,7 +9,10 @@ class BasketBody extends StatefulWidget {
   final void Function() setStateBasket;
 
   const BasketBody(
-      {Key? key, required this.basket, required this.setStateParent, required this.setStateBasket})
+      {Key? key,
+      required this.basket,
+      required this.setStateParent,
+      required this.setStateBasket})
       : super(key: key);
 
   @override
@@ -22,7 +25,7 @@ class _BasketBodyState extends State<BasketBody> {
     return Stack(
       children: [
         GridView.builder(
-            padding: const EdgeInsets.only(top: 40),
+            padding: const EdgeInsets.only(top: 47),
             itemCount: widget.basket.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, mainAxisSpacing: 2, crossAxisSpacing: 4),
@@ -30,15 +33,15 @@ class _BasketBodyState extends State<BasketBody> {
         Row(
           children: [
             Expanded(
-                child: ElevatedButton(
-              onPressed: _buyAll,
-              child: const Text('Купить'),
+                child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+              child: _buildBuyButton(),
             )),
             Expanded(
-                child: ElevatedButton(
-              onPressed: _cancelAll,
-              child: const Text('Отменить'),
-            )),
+                child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+                    child: _buildCancelButton())),
           ],
         )
       ],
@@ -47,24 +50,74 @@ class _BasketBodyState extends State<BasketBody> {
 
   Widget _buildItemGrid(BuildContext context, int index) {
     ItemModel item = widget.basket[index];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(
-          item.name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-        ),
-        Expanded(
-            child: Image.asset(
-          item.mainImage,
-          fit: BoxFit.cover,
-        )),
-        Text('К покупке ${item.count} за \$ ${item.count * item.price}'),
-        TextButton(onPressed: ()  => _cancel(item), child: const Text('Отменить покупку!'))
-      ],
+    return Container(
+      decoration: const BoxDecoration(
+          border: Border(
+        top: BorderSide(width: 1),
+        bottom: BorderSide(width: 1),
+        left: BorderSide(width: 1),
+        right: BorderSide(width: 1),
+      )),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              item.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+          Expanded(
+              child: Image.asset(
+            item.mainImage,
+            fit: BoxFit.cover,
+          )),
+          const SizedBox(
+            height: 4,
+          ),
+          Text('К покупке ${item.count} за \$ ${item.count * item.price}'),
+          TextButton(
+              style: ButtonsStyle.textButton,
+              onPressed: () => _cancel(item),
+              child: const Text(
+                'Отменить покупку!',
+                style: TextStyle(color: Colors.purple),
+              ))
+        ],
+      ),
     );
+  }
+
+  Widget _buildBuyButton() {
+    Widget button = widget.basket.isEmpty
+        ? ElevatedButton(
+            style: ButtonsStyle.button,
+            onPressed: _buyAll,
+            child: const Text('Купить'))
+        : ElevatedButton(
+            style: ButtonsStyle.button,
+            onPressed: null,
+            child: const Text('Купить'));
+    return button;
+  }
+
+  Widget _buildCancelButton() {
+    Widget button = widget.basket.isEmpty
+        ? ElevatedButton(
+            style: ButtonsStyle.button,
+            onPressed: _cancelAll,
+            child: const Text('Отменить'))
+        : ElevatedButton(
+            style: ButtonsStyle.button,
+            onPressed: null,
+            child: const Text('Отменить'));
+    return button;
   }
 
   void _cancel(ItemModel item) {
@@ -75,7 +128,7 @@ class _BasketBodyState extends State<BasketBody> {
   }
 
   void _buyAll() {
-    for(ItemModel item in  widget.basket) {
+    for (ItemModel item in widget.basket) {
       item.count = 0;
     }
     widget.basket.clear();
@@ -88,6 +141,6 @@ class _BasketBodyState extends State<BasketBody> {
       item.count = 0;
     }
     widget.basket.clear();
-    widget.setStateParent;
+    widget.setStateParent();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:market2/pages/basket/basket.dart';
 import 'package:market2/pages/main_page/main_page.dart';
+import 'package:market2/utils/colors_rgb.dart';
 
 import 'models/item_model.dart';
 
@@ -18,6 +19,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
 
     return MaterialApp(
+      theme: ThemeData(backgroundColor: ColorsRGB.background),
       initialRoute: '/',
       routes: {
         '/': (context) => MainPage(basket: basket, setStateParent: () => setState((){}),),
