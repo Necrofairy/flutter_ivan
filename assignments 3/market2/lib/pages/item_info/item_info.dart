@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:market2/utils/app_bar_static.dart';
 import 'package:market2/utils/buttons_style.dart';
 import 'package:market2/utils/colors_rgb.dart';
+import 'package:market2/utils/texts_style.dart';
 
 import '../../models/item_model.dart';
-import '../../utils/items.dart';
 
 class ItemInfo extends StatefulWidget {
   final List<ItemModel> basket;
@@ -37,22 +37,25 @@ class _ItemInfoState extends State<ItemInfo> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-              child: Text(item.name),
+              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+              child: Text(item.name,  style: TextsStyle.titleInfo,),
             ),
             Image.asset(
               item.descriptionImage,
               fit: BoxFit.cover,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Text(item.description),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 15),
               child: Text('На складе осталось ${item.num} штук!'),
             ),
-            _buildButton(item),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: _buildButton(item),
+            ),
           ],
         ),
       ),

@@ -23,7 +23,7 @@ class _BasketBodyState extends State<BasketBody> {
     return Stack(
       children: [
         GridView.builder(
-            padding: const EdgeInsets.only(top: 47),
+            padding: const EdgeInsets.only(top: 55),
             itemCount: widget.basket.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, mainAxisSpacing: 2, crossAxisSpacing: 4),
@@ -32,13 +32,13 @@ class _BasketBodyState extends State<BasketBody> {
           children: [
             Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                   child: _buildBuyButton(),
                 )),
             Expanded(
                 child: Padding(
                     padding:
-                    const EdgeInsets.symmetric(vertical: 1, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
                     child: _buildCancelButton())),
           ],
         ),
