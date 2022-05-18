@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:market2/models/item_model.dart';
+import 'package:market2/pages/favorites/favorites.dart';
 import 'package:market2/pages/item_info/item_info.dart';
 import 'package:market2/utils/decoration._text_field.dart';
 import 'package:market2/utils/items.dart';
@@ -23,7 +24,6 @@ class _ShopWidgetState extends State<ShopWidget> {
   final _searchController = TextEditingController();
   List<ItemModel> filter = [];
   List<ItemModel> favorite = [];
-  bool isShowFavorite = false;
 
   @override
   void initState() {
@@ -55,32 +55,22 @@ class _ShopWidgetState extends State<ShopWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
       child: Row(
-        mainAxisAlignment: isShowFavorite == true
-            ? MainAxisAlignment.center
-            : MainAxisAlignment.start,
         children: [
-          isShowFavorite == false
-              ? Expanded(
-                  flex: 10,
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: DecorationTextField.decoration,
-                  ),
-                )
-              : const Text('Избранное'),
-          isShowFavorite == false
-              ? Expanded(
-                  child: IconButton(
-                  icon: const Icon(Icons.favorite),
-                  onPressed: () {
-                    _showFavorite();
-                  },
-                ))
-              : IconButton(
-                  onPressed: () {
-                    _showFavorite();
-                  },
-                  icon: const Icon(Icons.favorite)),
+          Expanded(
+            flex: 10,
+            child: TextField(
+              controller: _searchController,
+              decoration: DecorationTextField.decoration,
+            ),
+          ),
+          Expanded(
+              child: IconButton(
+            icon: const Icon(Icons.favorite),
+            splashRadius: 1,
+            onPressed: () {
+              _showFavorite();
+            },
+          ))
         ],
       ),
     );
@@ -189,14 +179,14 @@ class _ShopWidgetState extends State<ShopWidget> {
   }
 
   void _showFavorite() {
-    if (isShowFavorite == false) {
-      isShowFavorite = true;
-      filter = favorite;
-    } else {
-      isShowFavorite = false;
-      filter = Items.items;
-    }
-    setState(() {});
+    NavigatorState navigatorState = Navigator.of(context);
+    navigatorState.push(MaterialPageRoute(
+        builder: (context) => Favorites(
+              favorites: favorite,
+              basket: widget.basket,
+              filter: filter,
+              setStateParent: widget.setStateParent,
+            )));
   }
 
   Widget _buildButton(ItemModel item) {
