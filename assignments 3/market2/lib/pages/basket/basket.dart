@@ -22,7 +22,7 @@ class _BasketState extends State<Basket> {
     return Scaffold(
       backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(
-          child: _buildIconBasket(), num: _calculateNum(), title: 'Basket'),
+          child: _buildIconBasket(), sum: _calculateSum(), title: 'Basket'),
       body: BasketBody(
         basket: widget.basket,
         setStateParent: widget.setStateParent,
@@ -30,13 +30,15 @@ class _BasketState extends State<Basket> {
     );
   }
 
-  int _calculateNum() {
-    if (widget.basket.isEmpty) return 0;
+  String _calculateSum() {
+    if (widget.basket.isEmpty) return '0';
     int num = 0;
+    int price = 0;
     for (ItemModel item in widget.basket) {
       num += item.count;
+      price += item.count * item.price;
     }
-    return num;
+    return '$num -  \$ $price';
   }
 
   Widget _buildIconBasket() {

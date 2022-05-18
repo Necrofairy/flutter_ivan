@@ -4,6 +4,7 @@ import 'package:market2/pages/item_info/item_info.dart';
 import 'package:market2/utils/decoration._text_field.dart';
 import 'package:market2/utils/items.dart';
 
+import '../../../utils/buttons_style.dart';
 import '../../../utils/texts_style.dart';
 
 class ShopWidget extends StatefulWidget {
@@ -35,45 +36,53 @@ class _ShopWidgetState extends State<ShopWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        GridView.builder(
-            padding: const EdgeInsets.only(top: 70),
-            itemCount: filter.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
-            itemBuilder: _buildGridItem),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
-          child: Row(
-            mainAxisAlignment: isShowFavorite == true
-                ? MainAxisAlignment.center
-                : MainAxisAlignment.start,
-            children: [
-              isShowFavorite == false
-                  ? Expanded(
-                      flex: 10,
-                      child: TextField(
-                        controller: _searchController,
-                        decoration: DecorationTextField.decoration,
-                      ),
-                    )
-                  : const Text('Избранное'),
-              isShowFavorite == false
-                  ? Expanded(
-                      child: IconButton(
-                      icon: const Icon(Icons.favorite),
-                      onPressed: () {
-                        _showFavorite();
-                      },
-                    ))
-                  : IconButton(
-                      onPressed: () {
-                        _showFavorite();
-                      },
-                      icon: const Icon(Icons.favorite)),
-            ],
-          ),
-        ),
+        _buildShopGrid(),
+        _buildSearchAndFavorite(),
       ],
+    );
+  }
+
+  Widget _buildShopGrid() {
+    return GridView.builder(
+        padding: const EdgeInsets.only(top: 70),
+        itemCount: filter.length,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
+        itemBuilder: _buildGridItem);
+  }
+
+  Widget _buildSearchAndFavorite() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 20),
+      child: Row(
+        mainAxisAlignment: isShowFavorite == true
+            ? MainAxisAlignment.center
+            : MainAxisAlignment.start,
+        children: [
+          isShowFavorite == false
+              ? Expanded(
+                  flex: 10,
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: DecorationTextField.decoration,
+                  ),
+                )
+              : const Text('Избранное'),
+          isShowFavorite == false
+              ? Expanded(
+                  child: IconButton(
+                  icon: const Icon(Icons.favorite),
+                  onPressed: () {
+                    _showFavorite();
+                  },
+                ))
+              : IconButton(
+                  onPressed: () {
+                    _showFavorite();
+                  },
+                  icon: const Icon(Icons.favorite)),
+        ],
+      ),
     );
   }
 
@@ -81,49 +90,52 @@ class _ShopWidgetState extends State<ShopWidget> {
     ItemModel item = filter[index];
     return Stack(
       children: [
-        Container(
-          decoration: const BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                top: BorderSide(width: 1),
-                bottom: BorderSide(width: 1),
-                left: BorderSide(width: 1),
-                right: BorderSide(width: 1),
-              )),
-          child: TextButton(
-            onPressed: () => {_readInfo(context, index)},
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text(
-                  item.name,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextsStyle.title,
-                ),
-                Expanded(child: Image.asset(item.mainImage, fit: BoxFit.cover)),
-                Text(
-                  'На складе осталось - ${item.num}',
-                  style: TextsStyle.text,
-                ),
-                Text(
-                  'Цена: \$ ${item.price}',
-                  style: TextsStyle.price,
-                ),
-              ],
+        Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Material(
+            elevation: 5,
+            shadowColor: _shadowCard(item),
+            child: TextButton(
+              onPressed: () => {_readInfo(context, index)},
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text(
+                    item.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextsStyle.title,
+                  ),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Expanded(
+                      child: Image.asset(item.mainImage, fit: BoxFit.cover)),
+                  const SizedBox(
+                    height: 4,
+                  ),
+                  Text(
+                    'На складе осталось - ${item.num}',
+                    style: TextsStyle.text,
+                  ),
+                  _buildButton(item),
+                ],
+              ),
             ),
           ),
         ),
         Container(
-          alignment: Alignment.topRight,
+          alignment: Alignment.centerRight,
           child: item.isFavorite
               ? IconButton(
+                  splashRadius: 1,
                   onPressed: () {
                     _removeFavorite(item);
                   },
                   icon: const Icon(Icons.favorite))
               : IconButton(
+                  splashRadius: 1,
                   onPressed: () {
                     _addFavorite(item);
                   },
@@ -131,6 +143,11 @@ class _ShopWidgetState extends State<ShopWidget> {
         )
       ],
     );
+  }
+
+  Color _shadowCard(ItemModel item) {
+    if (item.count == 0) return Colors.black;
+    return Colors.purple;
   }
 
   void _readInfo(BuildContext context, int index) {
@@ -180,5 +197,28 @@ class _ShopWidgetState extends State<ShopWidget> {
       filter = Items.items;
     }
     setState(() {});
+  }
+
+  Widget _buildButton(ItemModel item) {
+    if (item.num != 0) {
+      return ElevatedButton(
+          style: ButtonsStyle.button,
+          onPressed: () => _buy(item),
+          child: Text('Купить за ${item.price}'));
+    }
+    return ElevatedButton(
+        style: ButtonsStyle.button,
+        onPressed: null,
+        child: Text('Купить за ${item.price}'));
+  }
+
+  void _buy(ItemModel item) {
+    if (item.num == 0) return;
+    item.num--;
+    item.count++;
+    if (!widget.basket.contains(item)) {
+      widget.basket.add(item);
+    }
+    widget.setStateParent();
   }
 }

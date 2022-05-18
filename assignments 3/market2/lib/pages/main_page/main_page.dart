@@ -21,7 +21,7 @@ class _MainPageState extends State<MainPage> {
     return Scaffold(
       backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(
-          child: _iconBasket(), num: _calculateNum(), title: 'PC Shop'),
+          child: _iconBasket(), sum: _calculateSum(), title: 'PC Shop'),
       body: ShopWidget(
         basket: widget.basket,
         setStateParent: widget.setStateParent,
@@ -29,13 +29,15 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  int _calculateNum() {
-    if (widget.basket.isEmpty) return 0;
+  String _calculateSum() {
+    if (widget.basket.isEmpty) return '0';
     int num = 0;
+    int price = 0;
     for (ItemModel item in widget.basket) {
       num += item.count;
+      price += item.count * item.price;
     }
-    return num;
+    return '$num -  \$ $price';
   }
 
   Widget _iconBasket() {
@@ -49,4 +51,6 @@ class _MainPageState extends State<MainPage> {
   void _moveBasket() {
     Navigator.pushNamed(context, '/basket');
   }
+
+
 }

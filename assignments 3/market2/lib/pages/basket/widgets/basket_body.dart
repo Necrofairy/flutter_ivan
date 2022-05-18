@@ -48,47 +48,42 @@ class _BasketBodyState extends State<BasketBody> {
 
   Widget _buildItemGrid(BuildContext context, int index) {
     ItemModel item = widget.basket[index];
-    return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-          border: Border(
-        top: BorderSide(width: 1),
-        bottom: BorderSide(width: 1),
-        left: BorderSide(width: 1),
-        right: BorderSide(width: 1),
-      )),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              item.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Material(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                item.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
-          ),
-          const SizedBox(
-            height: 4,
-          ),
-          Expanded(
-              child: Image.asset(
-            item.mainImage,
-            fit: BoxFit.cover,
-          )),
-          const SizedBox(
-            height: 4,
-          ),
-          Text('К покупке ${item.count} за \$ ${item.count * item.price}'),
-          TextButton(
-              style: ButtonsStyle.textButton,
-              onPressed: () => _cancel(item),
-              child: const Text(
-                'Отменить покупку!',
-                style: TextStyle(color: Colors.purple),
-              ))
-        ],
+            const SizedBox(
+              height: 4,
+            ),
+            Expanded(
+                child: Image.asset(
+              item.mainImage,
+              fit: BoxFit.cover,
+            )),
+            const SizedBox(
+              height: 4,
+            ),
+            Text('К покупке ${item.count} за \$ ${item.count * item.price}'),
+            TextButton(
+                style: ButtonsStyle.textButton,
+                onPressed: () => _cancel(item),
+                child: const Text(
+                  'Отменить покупку!',
+                  style: TextStyle(color: Colors.purple),
+                ))
+          ],
+        ),
       ),
     );
   }
@@ -98,7 +93,7 @@ class _BasketBodyState extends State<BasketBody> {
         ? ElevatedButton(
             style: ButtonsStyle.button,
             onPressed: _buyAll,
-            child: const Text('Купить'))
+            child: Text('Купить \$ ${_calculateSum()}'))
         : ElevatedButton(
             style: ButtonsStyle.button,
             onPressed: null,
@@ -141,5 +136,13 @@ class _BasketBodyState extends State<BasketBody> {
     }
     widget.basket.clear();
     widget.setStateParent();
+  }
+
+  int _calculateSum() {
+    int price = 0;
+    for(ItemModel item in widget.basket) {
+      price += item.price * item.count;
+    }
+    return price;
   }
 }

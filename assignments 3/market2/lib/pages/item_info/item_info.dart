@@ -30,8 +30,8 @@ class _ItemInfoState extends State<ItemInfo> {
       backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(
           child: _buildIconBasket(),
-          num: _calculateNum(),
-          title: 'Информация о товаре'),
+          sum: _calculateSum(),
+          title: 'О товаре:'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,10 +40,15 @@ class _ItemInfoState extends State<ItemInfo> {
               padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
               child: Text(item.name,  style: TextsStyle.titleInfo,),
             ),
-            Image.asset(
-              item.descriptionImage,
-              fit: BoxFit.cover,
+            const SizedBox(height: 4,),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Image.asset(
+                item.descriptionImage,
+                fit: BoxFit.cover,
+              ),
             ),
+            const SizedBox(height: 4,),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
               child: Text(item.description),
@@ -62,13 +67,15 @@ class _ItemInfoState extends State<ItemInfo> {
     );
   }
 
-  int _calculateNum() {
-    if (widget.basket.isEmpty) return 0;
+  String _calculateSum() {
+    if (widget.basket.isEmpty) return '0';
     int num = 0;
+    int price = 0;
     for (ItemModel item in widget.basket) {
       num += item.count;
+      price += item.count * item.price;
     }
-    return num;
+    return '$num -  \$ $price';
   }
 
   Widget _buildIconBasket() {
