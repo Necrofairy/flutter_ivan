@@ -51,6 +51,8 @@ class _BasketBodyState extends State<BasketBody> {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Material(
+        elevation: 5,
+        shadowColor: Colors.purple,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
