@@ -5,7 +5,7 @@ import 'package:market2/utils/colors_rgb.dart';
 
 import '../../models/item_model.dart';
 
-class Basket extends StatefulWidget {
+class Basket extends StatelessWidget {
   final List<ItemModel> basket;
   final void Function() setStateParent;
 
@@ -13,28 +13,23 @@ class Basket extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<Basket> createState() => _BasketState();
-}
-
-class _BasketState extends State<Basket> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(
           child: _buildIconBasket(), sum: _calculateSum(), title: 'Basket'),
       body: BasketBody(
-        basket: widget.basket,
-        setStateParent: widget.setStateParent,
+        basket: basket,
+        setStateParent: setStateParent,
       ),
     );
   }
 
   String _calculateSum() {
-    if (widget.basket.isEmpty) return '0';
+    if (basket.isEmpty) return '0';
     int num = 0;
     int price = 0;
-    for (ItemModel item in widget.basket) {
+    for (ItemModel item in basket) {
       num += item.count;
       price += item.count * item.price;
     }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:market2/utils/buttons_style.dart';
+import 'package:market2/utils/colors_rgb.dart';
 
 import '../../../models/item_model.dart';
 
-class BasketBody extends StatefulWidget {
+class BasketBody extends StatelessWidget {
   final List<ItemModel> basket;
   final void Function() setStateParent;
 
@@ -14,17 +15,12 @@ class BasketBody extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<BasketBody> createState() => _BasketBodyState();
-}
-
-class _BasketBodyState extends State<BasketBody> {
-  @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         GridView.builder(
             padding: const EdgeInsets.only(top: 55),
-            itemCount: widget.basket.length,
+            itemCount: basket.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2, mainAxisSpacing: 2, crossAxisSpacing: 4),
             itemBuilder: _buildItemGrid),
@@ -47,12 +43,12 @@ class _BasketBodyState extends State<BasketBody> {
   }
 
   Widget _buildItemGrid(BuildContext context, int index) {
-    ItemModel item = widget.basket[index];
+    ItemModel item = basket[index];
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Material(
         elevation: 5,
-        shadowColor: Colors.purple,
+        shadowColor: ColorsRGB.activeCardShadow,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -91,7 +87,7 @@ class _BasketBodyState extends State<BasketBody> {
   }
 
   Widget _buildBuyButton() {
-    Widget button = widget.basket.isNotEmpty
+    Widget button = basket.isNotEmpty
         ? ElevatedButton(
             style: ButtonsStyle.button,
             onPressed: _buyAll,
@@ -104,7 +100,7 @@ class _BasketBodyState extends State<BasketBody> {
   }
 
   Widget _buildCancelButton() {
-    Widget button = widget.basket.isNotEmpty
+    Widget button = basket.isNotEmpty
         ? ElevatedButton(
             style: ButtonsStyle.button,
             onPressed: _cancelAll,
@@ -119,30 +115,30 @@ class _BasketBodyState extends State<BasketBody> {
   void _cancel(ItemModel item) {
     item.num += item.count;
     item.count = 0;
-    widget.basket.remove(item);
-    widget.setStateParent();
+    basket.remove(item);
+    setStateParent();
   }
 
   void _buyAll() {
-    for (ItemModel item in widget.basket) {
+    for (ItemModel item in basket) {
       item.count = 0;
     }
-    widget.basket.clear();
-    widget.setStateParent();
+    basket.clear();
+    setStateParent();
   }
 
   void _cancelAll() {
-    for (ItemModel item in widget.basket) {
+    for (ItemModel item in basket) {
       item.num += item.count;
       item.count = 0;
     }
-    widget.basket.clear();
-    widget.setStateParent();
+    basket.clear();
+    setStateParent();
   }
 
   int _calculateSum() {
     int price = 0;
-    for(ItemModel item in widget.basket) {
+    for(ItemModel item in basket) {
       price += item.price * item.count;
     }
     return price;

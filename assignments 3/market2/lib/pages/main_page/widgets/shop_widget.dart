@@ -6,6 +6,7 @@ import 'package:market2/utils/decoration._text_field.dart';
 import 'package:market2/utils/items.dart';
 
 import '../../../utils/buttons_style.dart';
+import '../../../utils/colors_rgb.dart';
 import '../../../utils/texts_style.dart';
 
 class ShopWidget extends StatefulWidget {
@@ -36,19 +37,20 @@ class _ShopWidgetState extends State<ShopWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        _buildShopGrid(),
+        _buildShop(),
         _buildSearchAndFavorite(),
       ],
     );
   }
 
-  Widget _buildShopGrid() {
+
+  Widget _buildShop() {
     return GridView.builder(
         padding: const EdgeInsets.only(top: 70),
         itemCount: filter.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
-        itemBuilder: _buildGridItem);
+        itemBuilder: _buildItemsGrid);
   }
 
   Widget _buildSearchAndFavorite() {
@@ -76,68 +78,75 @@ class _ShopWidgetState extends State<ShopWidget> {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, int index) {
+  Widget _buildItemsGrid(BuildContext context, int index) {
     ItemModel item = filter[index];
     return Stack(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Material(
-            elevation: 5,
-            shadowColor: _shadowCard(item),
-            child: TextButton(
-              onPressed: () => {_readInfo(context, index)},
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    item.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextsStyle.title,
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Expanded(
-                      child: Image.asset(item.mainImage, fit: BoxFit.cover)),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    'На складе осталось - ${item.num}',
-                    style: TextsStyle.text,
-                  ),
-                  _buildButton(item),
-                ],
+        _buildItem(item, index),
+        _buildFavoriteButton(item),
+      ],
+    );
+  }
+  Widget _buildItem(ItemModel  item, int index) {
+    return Padding(
+      padding: const EdgeInsets.all(2.0),
+      child: Material(
+        elevation: 5,
+        shadowColor: _shadowCard(item),
+        child: TextButton(
+          onPressed: () => {_readInfo(context, index)},
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                item.name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextsStyle.title,
               ),
-            ),
+              const SizedBox(
+                height: 4,
+              ),
+              Expanded(
+                  child: Image.asset(item.mainImage, fit: BoxFit.cover)),
+              const SizedBox(
+                height: 4,
+              ),
+              Text(
+                'На складе осталось - ${item.num}',
+                style: TextsStyle.text,
+              ),
+              _buildButton(item),
+            ],
           ),
         ),
-        Container(
-          alignment: Alignment.centerRight,
-          child: item.isFavorite
-              ? IconButton(
-                  splashRadius: 1,
-                  onPressed: () {
-                    _removeFavorite(item);
-                  },
-                  icon: const Icon(Icons.favorite))
-              : IconButton(
-                  splashRadius: 1,
-                  onPressed: () {
-                    _addFavorite(item);
-                  },
-                  icon: const Icon(Icons.favorite_border)),
-        )
-      ],
+      ),
+    );
+  }
+
+  Widget _buildFavoriteButton(ItemModel item) {
+    return Container(
+      alignment: Alignment.centerRight,
+      child: item.isFavorite
+          ? IconButton(
+          splashRadius: 1,
+          onPressed: () {
+            _removeFavorite(item);
+          },
+          icon: const Icon(Icons.favorite))
+          : IconButton(
+          splashRadius: 1,
+          onPressed: () {
+            _addFavorite(item);
+          },
+          icon: const Icon(Icons.favorite_border)),
     );
   }
 
   Color _shadowCard(ItemModel item) {
-    if (item.count == 0) return Colors.black;
-    return Colors.purple;
+    if (item.count == 0) return ColorsRGB.passiveCardShadow;
+    return ColorsRGB.activeCardShadow;
   }
 
   void _readInfo(BuildContext context, int index) {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:market2/utils/colors_rgb.dart';
 
 import '../../../models/item_model.dart';
 import '../../../utils/buttons_style.dart';
 import '../../../utils/texts_style.dart';
 import '../../item_info/item_info.dart';
 
-class FavoritesBodyWidget extends StatefulWidget {
+class FavoritesBodyWidget extends StatelessWidget {
   final List<ItemModel> favorites;
   final List<ItemModel> basket;
   final List<ItemModel> filter;
@@ -20,25 +21,20 @@ class FavoritesBodyWidget extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<FavoritesBodyWidget> createState() => _FavoritesBodyWidgetState();
-}
-
-class _FavoritesBodyWidgetState extends State<FavoritesBodyWidget> {
-  @override
   Widget build(BuildContext context) {
     return _buildGridItems();
   }
 
   Widget _buildGridItems() {
     return GridView.builder(
-        itemCount: widget.favorites.length,
+        itemCount: favorites.length,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, crossAxisSpacing: 5, mainAxisSpacing: 5),
         itemBuilder: _buildItem);
   }
 
   Widget _buildItem(BuildContext context, int index) {
-    ItemModel item = widget.favorites[index];
+    ItemModel item = favorites[index];
     return Stack(
       children: [
         Padding(
@@ -89,8 +85,8 @@ class _FavoritesBodyWidgetState extends State<FavoritesBodyWidget> {
   }
 
   Color _shadowCard(ItemModel item) {
-    if (item.count == 0) return Colors.black;
-    return Colors.purple;
+    if (item.count == 0) return ColorsRGB.passiveCardShadow;
+    return ColorsRGB.activeCardShadow;
   }
 
   void _readInfo(BuildContext context, int index) {
@@ -98,19 +94,19 @@ class _FavoritesBodyWidgetState extends State<FavoritesBodyWidget> {
         context,
         MaterialPageRoute(
             builder: (context) => ItemInfo(
-                  basket: widget.basket,
-                  item: widget.favorites[index],
-                  setStateParent: widget.setStateParent,
+                  basket: basket,
+                  item: favorites[index],
+                  setStateParent: setStateParent,
                 )));
   }
 
 
   void _removeFavorite(ItemModel item) {
-    int i = widget.favorites.indexOf(item);
-    int index = widget.filter.indexOf(item);
-    widget.filter[index].isFavorite = false;
-    widget.favorites.removeAt(i);
-    widget.setStateParent();
+    int i = favorites.indexOf(item);
+    int index = filter.indexOf(item);
+    filter[index].isFavorite = false;
+    favorites.removeAt(i);
+    setStateParent();
   }
 
   Widget _buildButton(ItemModel item) {
@@ -130,9 +126,9 @@ class _FavoritesBodyWidgetState extends State<FavoritesBodyWidget> {
     if (item.num == 0) return;
     item.num--;
     item.count++;
-    if (!widget.basket.contains(item)) {
-      widget.basket.add(item);
+    if (!basket.contains(item)) {
+      basket.add(item);
     }
-    widget.setStateParent();
+    setStateParent();
   }
 }

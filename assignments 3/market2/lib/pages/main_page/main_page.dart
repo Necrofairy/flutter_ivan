@@ -4,7 +4,7 @@ import 'package:market2/pages/main_page/widgets/shop_widget.dart';
 import 'package:market2/utils/app_bar_static.dart';
 import 'package:market2/utils/colors_rgb.dart';
 
-class MainPage extends StatefulWidget {
+class MainPage extends StatelessWidget {
   final List<ItemModel> basket;
   final void Function() setStateParent;
 
@@ -12,43 +12,38 @@ class MainPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
-}
-
-class _MainPageState extends State<MainPage> {
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: ColorsRGB.background,
       appBar: AppBarStatic.shopAppBar(
-          child: _iconBasket(), sum: _calculateSum(), title: 'PC Shop'),
+          child: _iconBasket(context), sum: _calculateSum(), title: 'PC Shop'),
       body: ShopWidget(
-        basket: widget.basket,
-        setStateParent: widget.setStateParent,
+        basket: basket,
+        setStateParent: setStateParent,
       ),
     );
   }
 
   String _calculateSum() {
-    if (widget.basket.isEmpty) return '0';
+    if (basket.isEmpty) return '0';
     int num = 0;
     int price = 0;
-    for (ItemModel item in widget.basket) {
+    for (ItemModel item in basket) {
       num += item.count;
       price += item.count * item.price;
     }
     return '$num -  \$ $price';
   }
 
-  Widget _iconBasket() {
+  Widget _iconBasket(BuildContext context) {
     return Expanded(
       child: IconButton(
           icon: const Icon(Icons.shopping_basket_outlined),
-          onPressed: _moveBasket),
+          onPressed: (){_moveBasket(context);}),
     );
   }
 
-  void _moveBasket() {
+  void _moveBasket(BuildContext context) {
     Navigator.pushNamed(context, '/basket');
   }
 
