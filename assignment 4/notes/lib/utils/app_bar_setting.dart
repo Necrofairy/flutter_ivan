@@ -24,4 +24,9 @@ abstract class AppBarSetting {
     centerTitle: true,
     backgroundColor: ColorsRGB.appBarColor,
   );
+  static final appBarEditNote = AppBar(
+    title: const Text('Edit note:'),
+    centerTitle: true,
+    backgroundColor: ColorsRGB.appBarColor,
+  );
 }

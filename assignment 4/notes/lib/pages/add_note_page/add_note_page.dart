@@ -4,10 +4,11 @@ import 'package:notes/utils/app_bar_setting.dart';
 import 'package:notes/utils/colors_rgb.dart';
 
 import '../../models/note.dart';
+import '../notes_page/notes_page.dart';
 
 class AddNotePage extends StatefulWidget {
   const AddNotePage({Key? key, required this.notes, required this.parentSetState}) : super(key: key);
-  static const routeName = '/add_notes';
+  static const routeName = '/add_note';
   final List<Note> notes;
   final void Function() parentSetState;
 
@@ -23,15 +24,17 @@ class _AddNotePageState extends State<AddNotePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarSetting.appBarAddNote,
-      body: AddNoteBodyWidget(
-        notes: widget.notes,
-        titleController: titleController,
-        bodyController: bodyController,
+      body: SingleChildScrollView(
+        child: AddNoteBodyWidget(
+          notes: widget.notes,
+          titleController: titleController,
+          bodyController: bodyController,
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _addNote(),
         backgroundColor: ColorsRGB.floatingButtonColor,
-        child: const Icon(Icons.edit_outlined),
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -47,5 +50,6 @@ class _AddNotePageState extends State<AddNotePage> {
     titleController.text = '';
     bodyController.text = '';
     widget.parentSetState();
+    Navigator.pop(context);
   }
 }
