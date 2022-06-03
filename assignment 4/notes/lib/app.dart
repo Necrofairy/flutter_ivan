@@ -22,7 +22,6 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     notes.addAll(Notes.notes);
-    Firebase.initializeApp();
   }
 
   @override

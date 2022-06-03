@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/pages/auth_page/widgets/auth_body_widget.dart';
 import 'package:notes/utils/app_bar_setting.dart';

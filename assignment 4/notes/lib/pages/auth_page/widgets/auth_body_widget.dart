@@ -141,7 +141,7 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
   void _googleSignIn() async {
     isRegisterAccess  = false;
     setState((){});
-    await auth.handleSignIn();
+    await auth.signInWithGoogle();
     Navigator.pushNamed(context, NotesPage.routeName);
     isRegisterAccess  = true;
     setState((){});
