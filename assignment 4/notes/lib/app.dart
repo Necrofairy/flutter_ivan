@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/pages/add_note_page/add_note_page.dart';
 import 'package:notes/pages/auth_page/auth_page.dart';
@@ -21,6 +22,7 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     notes.addAll(Notes.notes);
+    Firebase.initializeApp();
   }
 
   @override

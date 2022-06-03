@@ -27,5 +27,6 @@ class NotesPage extends StatelessWidget {
 
   void _addNote(BuildContext context) {
     Navigator.pushNamed(context, AddNotePage.routeName);
+
   }
 }
