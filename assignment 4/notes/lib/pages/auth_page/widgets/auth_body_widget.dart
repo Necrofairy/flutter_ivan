@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notes/domain/user.dart';
 import 'package:notes/pages/notes_page/notes_page.dart';
 import 'package:notes/utils/buttons_style.dart';
 import 'package:notes/utils/text_field_decoration.dart';
@@ -9,8 +11,10 @@ import '../../../utils/images_name.dart';
 
 class AuthBodyWidget extends StatefulWidget {
   final List<Note> notes;
+  final UserID user;
 
-  const AuthBodyWidget({Key? key, required this.notes}) : super(key: key);
+  const AuthBodyWidget({Key? key, required this.notes, required this.user})
+      : super(key: key);
 
   @override
   State<AuthBodyWidget> createState() => _AuthBodyWidgetState();
@@ -31,9 +35,9 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
         children: [
           _loginField(),
           _passwordField(),
-          isRegisterAccess? _button(): _passiveButton(),
+          isRegisterAccess ? _button() : _passiveButton(),
           _informationText(),
-          isRegisterAccess?  _googleSignInButton(): _googlePassiveButton(),
+          isRegisterAccess ? _googleSignInButton() : _googlePassiveButton(),
         ],
       ),
     );
@@ -62,11 +66,12 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
     return Container(
         margin: const EdgeInsets.only(bottom: 24),
         child: ElevatedButton(
-          style: ButtonsStyle.confirmButton,
+            style: ButtonsStyle.confirmButton,
             onPressed: () =>
                 _signIn(loginController.text, passwordController.text),
             child: const Text('Confirm')));
   }
+
   Widget _passiveButton() {
     return Container(
         margin: const EdgeInsets.only(bottom: 24),
@@ -127,23 +132,26 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
     );
   }
 
-  void _signIn(String email, String password) async {
-    isRegisterAccess  = false;
-    setState((){});
-    var res = await auth.signInWithEmailAndPassword(email, password);
-    if (res != null) {
-       Navigator.pushNamed(context, NotesPage.routeName);
-     }
-    isRegisterAccess  = true;
-    setState((){});
+  void _signIn(String email, String password) {
+    isRegisterAccess = false;
+    setState(() {});
+    Navigator.pushNamed(context, NotesPage.routeName);
+    isRegisterAccess = true;
+    setState(() {});
   }
 
-  void _googleSignIn() async {
-    isRegisterAccess  = false;
-    setState((){});
-    await auth.signInWithGoogle();
-    Navigator.pushNamed(context, NotesPage.routeName);
-    isRegisterAccess  = true;
-    setState((){});
+
+  void _googleSignIn()   {
+    isRegisterAccess = false;
+    setState(() {});
+    var future =  auth.signInWithGoogle();
+    future.then((value) {
+      widget.user.setID(value.user?.uid ?? '');
+      return Navigator.pushNamed(context, NotesPage.routeName);
+    });
+    isRegisterAccess = true;
+    setState(() {});
   }
+
+
 }

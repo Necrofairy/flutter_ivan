@@ -23,7 +23,6 @@ class Auth {
       accessToken: googleAuth?.accessToken,
       idToken: googleAuth?.idToken,
     );
-    print(credential.idToken);
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }

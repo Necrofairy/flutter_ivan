@@ -1,11 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notes/pages/add_note_page/add_note_page.dart';
 import 'package:notes/pages/auth_page/auth_page.dart';
 import 'package:notes/pages/edit_note_page/edit_note_page.dart';
 import 'package:notes/pages/notes_page/notes_page.dart';
-import 'package:notes/utils/notes.dart';
 
+import 'domain/user.dart';
 import 'models/note.dart';
 
 class App extends StatefulWidget {
@@ -17,11 +16,11 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final List<Note> notes = [];
+  final UserID user = UserID('');
 
   @override
   void initState() {
     super.initState();
-    notes.addAll(Notes.notes);
   }
 
   @override
@@ -32,6 +31,7 @@ class _AppState extends State<App> {
         AuthPage.routeName: (context) => AuthPage(
               notes: notes,
               parentSetState: () => setState(() {}),
+          user: user,
             ),
         NotesPage.routeName: (context) => NotesPage(
               notes: notes,
