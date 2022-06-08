@@ -12,8 +12,10 @@ import '../../../utils/images_name.dart';
 class AuthBodyWidget extends StatefulWidget {
   final List<Note> notes;
   final UserID user;
+  final Auth auth;
 
-  const AuthBodyWidget({Key? key, required this.notes, required this.user})
+  const AuthBodyWidget(
+      {Key? key, required this.notes, required this.user, required this.auth})
       : super(key: key);
 
   @override
@@ -23,7 +25,6 @@ class AuthBodyWidget extends StatefulWidget {
 class _AuthBodyWidgetState extends State<AuthBodyWidget> {
   var passwordController = TextEditingController();
   var loginController = TextEditingController();
-  Auth auth = Auth();
   bool isRegisterAccess = true;
 
   @override
@@ -140,18 +141,19 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
     setState(() {});
   }
 
-
-  void _googleSignIn()   {
+  void _googleSignIn() {
     isRegisterAccess = false;
     setState(() {});
-    var future =  auth.signInWithGoogle();
+    var future = widget.auth.signInWithGoogle();
     future.then((value) {
       widget.user.setID(value.user?.uid ?? '');
-      return Navigator.pushNamed(context, NotesPage.routeName);
+      Future<List<Note>> note = widget.user.getNote();
+      note.then((value){
+        widget.notes.addAll(value);
+        return Navigator.pushNamed(context, NotesPage.routeName);
+      });
     });
     isRegisterAccess = true;
     setState(() {});
   }
-
-
 }

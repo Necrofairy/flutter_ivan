@@ -3,6 +3,7 @@ import 'package:notes/pages/edit_note_page/widgets/edit_note_body_widget.dart';
 import 'package:notes/utils/app_bar_setting.dart';
 import 'package:notes/utils/colors_rgb.dart';
 
+import '../../domain/user.dart';
 import '../../models/note.dart';
 import '../notes_page/notes_page.dart';
 
@@ -10,9 +11,13 @@ class EditNotePage extends StatefulWidget {
   static const routeName = '/edit_note';
   final void Function() setStateParent;
   final List<Note> notes;
+  final UserID user;
 
   const EditNotePage(
-      {Key? key, required this.notes, required this.setStateParent})
+      {Key? key,
+      required this.notes,
+      required this.setStateParent,
+      required this.user})
       : super(key: key);
 
   @override
@@ -52,7 +57,9 @@ class _EditNotePageState extends State<EditNotePage> {
     }
     if (notes.contains(note)) {
       int index = notes.indexOf(note);
-      Note newNote = Note(title: titleController.text, body: bodyController.text);
+      Note newNote = Note(
+          title: titleController.text, body: bodyController.text, pos: note.pos);
+      widget.user.editNote(note, newNote.title, newNote.body);
       notes[index] = newNote;
       widget.setStateParent();
       Navigator.pop(context);

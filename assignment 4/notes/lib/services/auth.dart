@@ -14,8 +14,10 @@ class Auth {
       return null;
     }
   }
+  GoogleSignInAccount? googleUser;
+
   Future<UserCredential> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    googleUser = await GoogleSignIn().signIn();
 
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
@@ -25,6 +27,10 @@ class Auth {
     );
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
+  Future<void> signOutGoogle() async {
+    googleUser = await GoogleSignIn().signOut();
   }
 
 }

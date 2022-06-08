@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:notes/pages/edit_note_page/edit_note_page.dart';
 
+import '../../../domain/user.dart';
 import '../../../models/note.dart';
 
 class NotesBodyWidget extends StatelessWidget {
   final List<Note> notes;
   final void Function() parentSetState;
+  final UserID user;
 
   const NotesBodyWidget(
-      {Key? key, required this.notes, required this.parentSetState})
+      {Key? key,
+      required this.notes,
+      required this.parentSetState,
+      required this.user})
       : super(key: key);
 
   @override
@@ -34,15 +39,20 @@ class NotesBodyWidget extends StatelessWidget {
             ),
             Row(
               children: [
-                Expanded(child: Padding(
+                Expanded(
+                    child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(notes[index].body,),
+                  child: Text(
+                    notes[index].body,
+                  ),
                 )),
                 Column(
                   children: [
-                    IconButton(onPressed: () => _edit(notes[index], context),
+                    IconButton(
+                        onPressed: () => _edit(notes[index], context),
                         icon: const Icon(Icons.edit)),
-                    IconButton(onPressed: () => _remove(notes[index]),
+                    IconButton(
+                        onPressed: () => _remove(notes[index]),
                         icon: const Icon(Icons.remove))
                   ],
                 )
@@ -60,6 +70,7 @@ class NotesBodyWidget extends StatelessWidget {
   void _remove(Note note) {
     if (notes.contains(note)) {
       int index = notes.indexOf(note);
+      user.deleteNote(note);
       notes.removeAt(index);
       parentSetState();
     }
