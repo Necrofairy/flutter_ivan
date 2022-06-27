@@ -179,7 +179,7 @@ class WeatherDayWidget extends StatelessWidget {
             size: 32,
           ),
           Text(
-            '${daily!.pop! * 100}%',
+            '${(daily!.pop! * 100).round()}%',
             style: TextStyles.bigText,
           ),
         ],
