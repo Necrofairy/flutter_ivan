@@ -50,7 +50,7 @@ class WeatherNDaysWidget extends StatelessWidget {
       children: [
         Text(
           '$dataTime',
-          style: TextStyles.smallText,
+          style: TextStyles.smallBoldText,
         ),
         Text(
           'Day: ${(daily![index].temp!.day! - Consts.differentTemp).round()}°',

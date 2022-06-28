@@ -4,6 +4,7 @@ import 'package:weather/utils/colors_rgb.dart';
 
 import '../../../models/weather_model.dart';
 import '../../../utils/consts.dart';
+import '../../../utils/images_name.dart';
 import '../../../utils/text_styles.dart';
 
 class WeatherDayWidget extends StatelessWidget {
@@ -14,23 +15,45 @@ class WeatherDayWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AssetImage? image = _choiceImage(daily?.weather?[0].main);
     return Container(
-      color: ColorsRGB.green,
+      decoration: image != null ? BoxDecoration(
+          image: DecorationImage(image: image, fit: BoxFit.fill)) : null,
+      color: image == null? ColorsRGB.green: null,
       child: SingleChildScrollView(
-        child: Column(
-          children: [
-            _cityName(),
-            _dayTime(),
-            _temp(),
-            _weather(),
-            _clouds(),
-            _humidity(),
-            _windSpeed(),
-            _pop()
-          ],
+        child: Container(
+          color: Colors.white24,
+          child: Column(
+            children: [
+              _cityName(),
+              _dayTime(),
+              _temp(),
+              _weather(),
+              _clouds(),
+              _humidity(),
+              _windSpeed(),
+              _pop()
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  AssetImage? _choiceImage(String? weather) {
+    AssetImage? image;
+    switch (weather) {
+      case 'Clouds':
+        image = const AssetImage(ImagesName.clouds);
+        break;
+      case 'Rain':
+        image = const AssetImage(ImagesName.rain);
+        break;
+      case 'Clear':
+        image = const AssetImage(ImagesName.clear);
+        break;
+    }
+    return image;
   }
 
   Widget _temp() {

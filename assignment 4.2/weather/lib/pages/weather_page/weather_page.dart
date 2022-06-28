@@ -33,6 +33,7 @@ class WeatherPage extends StatelessWidget {
             title: const Text('Weather'),
             centerTitle: true,
             backgroundColor: ColorsRGB.black,
+
           ),
           body: TabBarView(
             children: [
