@@ -14,7 +14,10 @@
 ![image](https://user-images.githubusercontent.com/96979246/171864788-7230e54b-e03f-4b40-96ab-d4a9c6e2624c.png)
 ![image](https://user-images.githubusercontent.com/96979246/171864866-e7e4a62e-9349-438d-a8b4-2e51bc34322a.png)
 
-4. Работа о простых заметках, еще не доделано!
+4. Работа о простых заметках, json!
 ![image](https://user-images.githubusercontent.com/96979246/171864027-fafe79d3-1a38-49e8-a91e-d4d8f71b2d2c.png)
 ![image](https://user-images.githubusercontent.com/96979246/171864454-5add92a8-cdd9-413e-9236-e1469084ef36.png)
+
+4.2. Задание о погоде, json!
+![image](https://user-images.githubusercontent.com/96979246/176104303-b3f659d5-c8b2-4a05-ad85-641c4fffd358.png)
 
