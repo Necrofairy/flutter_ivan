@@ -1,15 +1,14 @@
-
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:assignment5/global_widgets/account_info.dart';
+import 'package:assignment5/pages/registration_page/bloc/registration_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/user.dart';
-import '../../../services/auth.dart';
+import '../../../models/data_account.dart';
 
 class RegistrationBodyWidget extends StatefulWidget {
-  const RegistrationBodyWidget({Key? key}) : super(key: key);
+  const RegistrationBodyWidget({Key? key, required this.data})
+      : super(key: key);
+  final DataAccount data;
 
   @override
   State<RegistrationBodyWidget> createState() => _RegistrationBodyWidgetState();
@@ -33,21 +32,33 @@ class _RegistrationBodyWidgetState extends State<RegistrationBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        child: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildNameForm(),
-        _buildIndent(indent: 10),
-        _buildEmailForm(),
-        _buildIndent(indent: 10),
-        _buildPasswordForm(),
-        _buildIndent(indent: 10),
-        _buildRepeatPasswordForm(),
-        _buildIndent(indent: 20),
-        _buildButtonConfirm(context),
-      ],
-    ));
+    return BlocBuilder<RegistrationBloc, RegistrationState>(
+      builder: (context, state) {
+        if (state is  RegistrationInitial) {
+          return Form(
+              child: ListView(
+                padding: const EdgeInsets.all(16),
+                children: [
+                  _buildNameForm(),
+                  _buildIndent(indent: 10),
+                  _buildEmailForm(),
+                  _buildIndent(indent: 10),
+                  _buildPasswordForm(),
+                  _buildIndent(indent: 10),
+                  _buildRepeatPasswordForm(),
+                  _buildIndent(indent: 20),
+                  _buildButtonConfirm(context),
+                ],
+              ));
+        } else if (state is RegistrationDownload) {
+          return const Center(child: CircularProgressIndicator(),);
+        } else if (state is RegistrationError) {
+          return const Center(child: Text('Error!'),);
+        } else {
+          return AccountInfo(data: widget.data);
+        }
+      },
+    );
   }
 
   Widget _buildIndent({required double indent}) {
@@ -85,35 +96,14 @@ class _RegistrationBodyWidgetState extends State<RegistrationBodyWidget> {
   }
 
   Widget _buildButtonConfirm(BuildContext context) {
+    RegistrationBloc registrationBloc = BlocProvider.of<RegistrationBloc>(context);
     return ElevatedButton(
-        onPressed: isActive?() {
-          _goChatRoom(context);
-        }: null,
+        onPressed: () {
+          widget.data.nickname = _nicknameController.text;
+          widget.data.password = _passwordController.text;
+          widget.data.email = _emailController.text;
+          registrationBloc.add(RegistrationConfirmEvent());
+        },
         child: const Text('Confirm'));
   }
-
-  void _goChatRoom(BuildContext context) async  {
-    isActive = false;
-    setState((){});
-    Auth auth = Auth();
-    auth.logout();
-    var registration = await auth.registration(_emailController.text, _passwordController.text);
-    if (registration?.user?.uid == null) {
-      await Future.delayed(const Duration(seconds: 2));
-      isActive = true;
-      setState((){});
-      return;
-    }
-    FirebaseDatabase database = FirebaseDatabase.instance;
-    var ref = database.ref('accounts/${registration?.user?.uid}');
-    await ref.set({
-      'nickname': _nicknameController.text,
-      'email': _emailController.text,
-      'password': _passwordController.text,
-      'uid': registration?.user?.uid
-    });
-    isActive = true;
-    Navigator.pop(context);
-  }
-
 }

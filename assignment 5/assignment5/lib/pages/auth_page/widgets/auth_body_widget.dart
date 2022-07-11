@@ -1,15 +1,17 @@
-import 'dart:collection';
-import 'dart:convert';
-
+import 'package:assignment5/pages/auth_page/bloc/auth_event.dart';
+import 'package:assignment5/pages/auth_page/bloc/auth_state.dart';
 import 'package:assignment5/pages/registration_page/registration_page.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:assignment5/pages/selector_chat_room_page/selector_chat_room_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../models/user.dart';
-import '../../../services/auth.dart';
+import '../../../global_widgets/account_info.dart';
+import '../../../models/data_account.dart';
+import '../bloc/auth_bloc.dart';
 
 class AuthBodyWidget extends StatefulWidget {
-  const AuthBodyWidget({Key? key}) : super(key: key);
+  const AuthBodyWidget({Key? key, required this.data}) : super(key: key);
+  final DataAccount data;
 
   @override
   State<AuthBodyWidget> createState() => _AuthBodyWidgetState();
@@ -19,7 +21,6 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool isActive = true;
-
 
   @override
   void initState() {
@@ -37,19 +38,36 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Form(
-        child: ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildEmailForm(),
-        _buildIndent(indent: 10),
-        _buildPasswordForm(),
-        _buildIndent(indent: 20),
-        _buildButtonConfirm(),
-        _buildIndent(indent: 10),
-        _buildRegisterButton(context),
-      ],
-    ));
+    return BlocBuilder<AuthBloc, AuthState>(
+      builder: (context, state) {
+        if (state is AuthMenuState) {
+          return Form(
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _buildEmailForm(),
+                _buildIndent(indent: 10),
+                _buildPasswordForm(),
+                _buildIndent(indent: 20),
+                _buildButtonConfirm(),
+                _buildIndent(indent: 10),
+                _buildRegisterButton(context),
+              ],
+            ),
+          );
+        } else if (state is AuthGettingUserState) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state is AuthErrorState) {
+          return Center(
+            child: Text('$AuthErrorState'),
+          );
+        } else {
+          return AccountInfo(data: widget.data);
+        }
+      },
+    );
   }
 
   Widget _buildIndent({required double indent}) {
@@ -73,52 +91,21 @@ class _AuthBodyWidgetState extends State<AuthBodyWidget> {
   }
 
   Widget _buildButtonConfirm() {
-    return ElevatedButton(onPressed:isActive? () {_goChatRoom();}:null, child: const Text('Confirm'));
+    final AuthBloc authBloc = BlocProvider.of<AuthBloc>(context);
+    return ElevatedButton(
+        onPressed: () {
+          widget.data.email = _emailController.text;
+          widget.data.password = _passwordController.text;
+          authBloc.add(AuthConfirmEvent());
+        },
+        child: const Text('Confirm'));
   }
 
   Widget _buildRegisterButton(BuildContext context) {
     return TextButton(
-        onPressed:() {
-          _goRegister(context);
+        onPressed: () {
+          Navigator.pushNamed(context, RegistrationPage.routeName);
         },
         child: const Text('Click to register'));
-  }
-
-  void _goChatRoom() async{
-    isActive = false;
-    setState((){});
-    Auth auth = Auth();
-    auth.logout();
-    var auth2 = await auth.auth(_emailController.text, _passwordController.text);
-    if (auth2?.user?.uid == null)  {
-      await Future.delayed(const Duration(seconds: 2));
-      isActive = true;
-      setState((){});
-      return;
-    }
-    FirebaseDatabase database = FirebaseDatabase.instance;
-    var ref =  database.ref('accounts/${auth2?.user?.uid}');
-    var snapshot = await ref.get();
-    var json = jsonEncode(snapshot.value);
-    Map<String, dynamic> map = jsonDecode(json);
-    User user =  User.fromJson(map);
-    var ref2 = database.ref('accounts/');
-    var snapshot2 = await ref2.get();
-    var json2 = jsonEncode(snapshot2.value);
-    Map<String, dynamic> map2 = jsonDecode(json2);
-    List<Map<String, dynamic>> list = [];
-    map2.forEach((key, value) {
-      list.add(value);
-    });
-    List<User> list2 = [];
-    for(var user in list){
-      list2.add(User.fromJson(user));
-    }
-    isActive = true;
-    setState((){});
-  }
-
-  void _goRegister(BuildContext context) {
-    Navigator.pushNamed(context, RegistrationPage.routeName);
   }
 }
