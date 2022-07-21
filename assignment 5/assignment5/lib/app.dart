@@ -1,8 +1,10 @@
 import 'package:assignment5/pages/auth_page/auth_page.dart';
 import 'package:assignment5/pages/auth_page/bloc/auth_bloc.dart';
+import 'package:assignment5/pages/chat_room_page/bloc/chat_room_bloc.dart';
 import 'package:assignment5/pages/chat_room_page/chat_room_page.dart';
 import 'package:assignment5/pages/registration_page/bloc/registration_bloc.dart';
 import 'package:assignment5/pages/registration_page/registration_page.dart';
+import 'package:assignment5/pages/selector_chat_room_page/bloc/selector_bloc.dart';
 import 'package:assignment5/pages/selector_chat_room_page/selector_chat_room_page.dart';
 import 'package:assignment5/services/auth.dart';
 import 'package:assignment5/services/registration.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'models/data_account.dart';
+import 'models/message.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -35,6 +38,10 @@ class _AppState extends State<App> {
           create: (context) =>
               RegistrationBloc(data: data, registration: registration),
         ),
+        BlocProvider(
+          create: (context) =>
+              SelectorBloc(),
+        ),
       ],
       child: MaterialApp(
         initialRoute: AuthPage.routeName,
@@ -45,9 +52,9 @@ class _AppState extends State<App> {
           RegistrationPage.routeName: (context) => RegistrationPage(
                 data: data,
               ),
-          ChatRoomPage.routeName: (context) => const ChatRoomPage(),
+          ChatRoomPage.routeName: (context) =>  ChatRoomPage(data: data),
           SelectorChatRoomPage.routeName: (context) =>
-              const SelectorChatRoomPage(),
+               SelectorChatRoomPage(data: data,),
         },
       ),
     );
